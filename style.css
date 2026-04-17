@@ -274,19 +274,29 @@ box-shadow: 0 6px 15px rgba(0,0,0,0.2);
 /* ================= MOBILE ================= */
 @media (max-width: 768px) {
 
-/* --- Scroll Snap: each section fills the screen --- */
-html {
-  scroll-snap-type: y mandatory;
-  overflow-y: scroll;
+/* ---- SCROLL SNAP SETUP ---- */
+html, body {
   height: 100%;
+  overflow: hidden; /* lock outer scroll */
 }
 
 body {
-  height: 100%;
   overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  -webkit-overflow-scrolling: touch;
 }
 
-nav,
+/* Sticky nav stays outside snap flow */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  height: 60px;
+}
+
+/* Every section snaps and fills exactly one screen */
 #hero,
 #projects,
 #services,
@@ -294,159 +304,242 @@ nav,
 footer {
   scroll-snap-align: start;
   scroll-snap-stop: always;
-}
-
-/* Make every section exactly fill the viewport */
-#hero,
-#projects,
-#services,
-#contact,
-footer {
-  min-height: 100dvh; /* dvh = dynamic viewport height, works on mobile browsers */
+  height: 100dvh;           /* full viewport height */
+  padding-top: 60px;        /* offset for fixed nav */
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  box-sizing: border-box;
+  align-items: center;
   overflow: hidden;
-}
-
-/* Shrink text & spacing so content fits one screen */
-#hero {
-  padding: 60px 20px 30px;
-}
-
-#hero h1 {
-  font-size: 1.5rem;
-  line-height: 1.3;
-}
-
-#hero p {
-  font-size: 0.88rem;
-  margin-top: 10px;
-}
-
-#projects {
-  padding: 30px 15px;
-}
-
-#projects h2 {
-  margin-bottom: 15px;
-  font-size: 1.2rem;
-}
-
-/* Show only one project card at a time via horizontal scroll */
-.project-container {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  gap: 15px;
-  padding-bottom: 10px;
-  -webkit-overflow-scrolling: touch;
-}
-
-.project-card {
-  min-width: 80vw;
-  flex-shrink: 0;
-  scroll-snap-align: center;
-}
-
-.project-card img {
-  height: 130px;
-}
-
-.project-card h3 {
-  font-size: 0.95rem;
-  margin-top: 8px;
-}
-
-.project-card p {
-  font-size: 0.8rem;
-}
-
-#services {
-  padding: 30px 20px;
-}
-
-#services h2 {
-  font-size: 1.2rem;
-}
-
-#services li {
-  font-size: 0.9rem;
-  margin: 7px 0;
-}
-
-#services p {
-  font-size: 0.85rem;
-  margin-top: 10px;
-}
-
-#contact {
-  padding: 30px 15px;
-}
-
-#contact h2 {
-  font-size: 1.2rem;
-}
-
-#contactForm {
-  gap: 10px;
-}
-
-#contactForm input,
-#contactForm textarea {
-  padding: 10px;
-  font-size: 0.85rem;
-}
-
-#contactForm textarea {
-  height: 80px;
-  resize: none;
-}
-
-footer {
-  padding: 25px 20px 15px;
-  min-height: auto; /* footer can be shorter */
-}
-
-.footer-content {
-  flex-direction: column;
   text-align: center;
 }
 
-.footer-bottom {
-  font-size: 0.75rem;
-  margin-top: 12px;
-}
-
-/* Hamburger */
+/* ---- HAMBURGER ---- */
 .menu-toggle {
   display: block;
 }
 
 nav ul {
   position: absolute;
-  top: 65px;
+  top: 60px;
   left: 0;
   width: 100%;
   background: #111827;
   flex-direction: column;
   align-items: center;
   display: none;
-  padding: 20px 0;
+  padding: 15px 0;
+  z-index: 999;
 }
 
 nav ul.active {
   display: flex;
 }
 
+/* ---- HERO ---- */
+#hero {
+  padding: 60px 20px 20px;
 }
 
-/* Desktop fix */
+#hero h1 {
+  font-size: 1.45rem;
+  line-height: 1.3;
+  max-width: 320px;
+}
+
+#hero p {
+  font-size: 0.82rem;
+  margin-top: 10px;
+  max-width: 300px;
+  color: #d1d5db;
+}
+
+.cta-btn {
+  margin-top: 18px;
+  padding: 10px 22px;
+  font-size: 0.9rem;
+}
+
+/* ---- PROJECTS ---- */
+#projects {
+  padding: 60px 10px 10px;
+  justify-content: flex-start;
+}
+
+#projects h2 {
+  font-size: 1.1rem;
+  margin-bottom: 12px;
+  margin-top: 5px;
+}
+
+/* Horizontal swipe carousel - one card visible */
+.project-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  gap: 12px;
+  padding: 0 20px 10px;
+  width: 100%;
+  scrollbar-width: none;
+}
+
+.project-container::-webkit-scrollbar {
+  display: none;
+}
+
+.project-card {
+  min-width: 75vw;
+  max-width: 75vw;
+  flex-shrink: 0;
+  scroll-snap-align: center;
+}
+
+.project-card img {
+  height: 110px;
+}
+
+.project-card h3 {
+  font-size: 0.88rem;
+  margin-top: 7px;
+}
+
+.project-card p {
+  font-size: 0.75rem;
+  padding: 0 8px;
+}
+
+.project-card a {
+  margin: 10px;
+  padding: 7px 14px;
+  font-size: 0.8rem;
+}
+
+/* swipe hint text */
+#projects::after {
+  content: "← swipe cards →";
+  font-size: 0.7rem;
+  color: #9ca3af;
+  margin-top: 6px;
+  display: block;
+}
+
+/* ---- SERVICES ---- */
+#services {
+  padding: 60px 25px 20px;
+}
+
+#services h2 {
+  font-size: 1.1rem;
+  margin-bottom: 12px;
+}
+
+#services ul {
+  list-style: none;
+  margin-bottom: 12px;
+}
+
+#services li {
+  font-size: 0.88rem;
+  margin: 7px 0;
+}
+
+#services p {
+  font-size: 0.8rem;
+  max-width: 300px;
+}
+
+/* ---- CONTACT ---- */
+#contact {
+  padding: 60px 15px 15px;
+}
+
+#contact h2 {
+  font-size: 1.1rem;
+}
+
+#contact > p {
+  font-size: 0.82rem;
+  margin-bottom: 5px;
+}
+
+#contactForm {
+  width: 100%;
+  max-width: 340px;
+  gap: 8px;
+  margin: 10px auto;
+}
+
+#contactForm input,
+#contactForm textarea {
+  padding: 9px 12px;
+  font-size: 0.82rem;
+}
+
+#contactForm textarea {
+  height: 65px;
+  resize: none;
+}
+
+#contactForm button {
+  padding: 10px;
+  font-size: 0.88rem;
+}
+
+#contact > p:last-child {
+  font-size: 0.75rem;
+  margin-top: 6px;
+  color: #9ca3af;
+}
+
+/* ---- FOOTER ---- */
+footer {
+  padding: 60px 20px 20px;
+  height: auto;
+  min-height: 100dvh;
+}
+
+.footer-content {
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.footer-brand span {
+  font-size: 0.9rem;
+}
+
+.footer-links {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.footer-links a {
+  display: inline;
+  font-size: 0.82rem;
+}
+
+.footer-social {
+  font-size: 1.1rem;
+  display: flex;
+  gap: 15px;
+}
+
+.footer-bottom {
+  font-size: 0.72rem;
+  margin-top: 15px;
+}
+
+}
+
+/* ---- DESKTOP: always show nav links ---- */
 @media (min-width: 769px) {
 nav ul {
-display: flex !important;
+  display: flex !important;
 }
 }
