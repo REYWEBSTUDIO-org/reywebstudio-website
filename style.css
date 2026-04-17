@@ -14,6 +14,13 @@ body {
 background: #f5f7fb;
 color: #1f2937;
 line-height: 1.6;
+overflow-x: hidden; /* prevents side scroll */
+}
+
+/* Make images responsive */
+img {
+max-width: 100%;
+height: auto;
 }
 
 /* ================= NAVBAR ================= */
@@ -21,7 +28,8 @@ nav {
 display: flex;
 justify-content: space-between;
 align-items: center;
-padding: 15px 30px;
+flex-wrap: wrap;
+padding: 15px 20px;
 background: rgba(17, 24, 39, 0.95);
 backdrop-filter: blur(10px);
 position: sticky;
@@ -30,14 +38,14 @@ z-index: 1000;
 }
 
 .logo img {
-height: 50px;
+height: 45px;
 }
 
 /* Nav links */
 nav ul {
 list-style: none;
 display: flex;
-gap: 25px;
+gap: 20px;
 }
 
 nav a {
@@ -62,19 +70,19 @@ cursor: pointer;
 /* ================= HERO ================= */
 #hero {
 text-align: center;
-padding: 80px 20px;
+padding: 70px 20px;
 background: linear-gradient(to right, #111827, #1f2937);
 color: white;
 }
 
 #hero h1 {
-font-size: 2.8rem;
+font-size: 2.5rem;
 font-weight: 600;
 }
 
 #hero p {
 margin-top: 15px;
-font-size: 1.1rem;
+font-size: 1rem;
 color: #d1d5db;
 }
 
@@ -96,17 +104,17 @@ transform: scale(1.05);
 
 /* ================= PROJECTS ================= */
 #projects {
-padding: 60px 20px;
+padding: 50px 15px;
 text-align: center;
 }
 
 #projects h2 {
-margin-bottom: 30px;
+margin-bottom: 25px;
 }
 
 .project-container {
 display: flex;
-gap: 25px;
+gap: 20px;
 justify-content: center;
 flex-wrap: wrap;
 }
@@ -158,7 +166,7 @@ color: black;
 
 /* ================= SERVICES ================= */
 #services {
-padding: 60px 20px;
+padding: 50px 15px;
 text-align: center;
 background: #f9fafb;
 }
@@ -176,7 +184,7 @@ font-weight: 500;
 /* ================= CONTACT ================= */
 #contact {
 text-align: center;
-padding: 70px 20px;
+padding: 60px 15px;
 background: #111827;
 color: white;
 }
@@ -215,12 +223,11 @@ transform: scale(1.05);
 footer {
 background: #111827;
 color: white;
-padding: 40px 30px 20px;
+padding: 40px 20px 20px;
 }
 
 .footer-logo {
-height: 45px;
-filter: drop-shadow(0 0 6px rgba(212, 175, 55, 0.5));
+height: 40px;
 }
 
 .footer-content {
@@ -250,13 +257,13 @@ color: #6b7280;
 /* ================= WHATSAPP ================= */
 .whatsapp-btn {
 position: fixed;
-bottom: 20px;
-right: 20px;
+bottom: 15px;
+right: 15px;
 background: #25D366;
 color: white;
-font-size: 28px;
-width: 55px;
-height: 55px;
+font-size: 24px;
+width: 50px;
+height: 50px;
 display: flex;
 justify-content: center;
 align-items: center;
@@ -273,7 +280,7 @@ display: block;
 
 nav ul {
 position: absolute;
-top: 70px;
+top: 65px;
 left: 0;
 width: 100%;
 background: #111827;
@@ -288,12 +295,11 @@ display: flex;
 }
 
 #hero h1 {
-font-size: 2rem;
+font-size: 1.8rem;
 }
 
-.project-container {
-flex-direction: column;
-align-items: center;
+#hero p {
+font-size: 0.95rem;
 }
 
 .project-card {
@@ -306,7 +312,7 @@ text-align: center;
 }
 }
 
-/* Desktop nav */
+/* Desktop fix */
 @media (min-width: 769px) {
 nav ul {
 display: flex !important;
