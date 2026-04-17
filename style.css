@@ -274,42 +274,174 @@ box-shadow: 0 6px 15px rgba(0,0,0,0.2);
 /* ================= MOBILE ================= */
 @media (max-width: 768px) {
 
-.menu-toggle {
-display: block;
+/* --- Scroll Snap: each section fills the screen --- */
+html {
+  scroll-snap-type: y mandatory;
+  overflow-y: scroll;
+  height: 100%;
 }
 
-nav ul {
-position: absolute;
-top: 65px;
-left: 0;
-width: 100%;
-background: #111827;
-flex-direction: column;
-align-items: center;
-display: none;
-padding: 20px 0;
+body {
+  height: 100%;
+  overflow-y: auto;
 }
 
-nav ul.active {
-display: flex;
+nav,
+#hero,
+#projects,
+#services,
+#contact,
+footer {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+/* Make every section exactly fill the viewport */
+#hero,
+#projects,
+#services,
+#contact,
+footer {
+  min-height: 100dvh; /* dvh = dynamic viewport height, works on mobile browsers */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* Shrink text & spacing so content fits one screen */
+#hero {
+  padding: 60px 20px 30px;
 }
 
 #hero h1 {
-font-size: 1.8rem;
+  font-size: 1.5rem;
+  line-height: 1.3;
 }
 
 #hero p {
-font-size: 0.95rem;
+  font-size: 0.88rem;
+  margin-top: 10px;
+}
+
+#projects {
+  padding: 30px 15px;
+}
+
+#projects h2 {
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+}
+
+/* Show only one project card at a time via horizontal scroll */
+.project-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  gap: 15px;
+  padding-bottom: 10px;
+  -webkit-overflow-scrolling: touch;
 }
 
 .project-card {
-width: 90%;
+  min-width: 80vw;
+  flex-shrink: 0;
+  scroll-snap-align: center;
+}
+
+.project-card img {
+  height: 130px;
+}
+
+.project-card h3 {
+  font-size: 0.95rem;
+  margin-top: 8px;
+}
+
+.project-card p {
+  font-size: 0.8rem;
+}
+
+#services {
+  padding: 30px 20px;
+}
+
+#services h2 {
+  font-size: 1.2rem;
+}
+
+#services li {
+  font-size: 0.9rem;
+  margin: 7px 0;
+}
+
+#services p {
+  font-size: 0.85rem;
+  margin-top: 10px;
+}
+
+#contact {
+  padding: 30px 15px;
+}
+
+#contact h2 {
+  font-size: 1.2rem;
+}
+
+#contactForm {
+  gap: 10px;
+}
+
+#contactForm input,
+#contactForm textarea {
+  padding: 10px;
+  font-size: 0.85rem;
+}
+
+#contactForm textarea {
+  height: 80px;
+  resize: none;
+}
+
+footer {
+  padding: 25px 20px 15px;
+  min-height: auto; /* footer can be shorter */
 }
 
 .footer-content {
-flex-direction: column;
-text-align: center;
+  flex-direction: column;
+  text-align: center;
 }
+
+.footer-bottom {
+  font-size: 0.75rem;
+  margin-top: 12px;
+}
+
+/* Hamburger */
+.menu-toggle {
+  display: block;
+}
+
+nav ul {
+  position: absolute;
+  top: 65px;
+  left: 0;
+  width: 100%;
+  background: #111827;
+  flex-direction: column;
+  align-items: center;
+  display: none;
+  padding: 20px 0;
+}
+
+nav ul.active {
+  display: flex;
+}
+
 }
 
 /* Desktop fix */
