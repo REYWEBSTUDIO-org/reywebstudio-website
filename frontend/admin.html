@@ -1,0 +1,832 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | Rey Web Studio</title>
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;1,500&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Admin Specific Dashboard Layout & Styling preserving brand identity */
+    body {
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .admin-nav {
+      background: rgba(11, 14, 18, 0.95);
+      border-bottom: 1px solid var(--line);
+      padding: 16px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .admin-container {
+      max-width: 1240px;
+      margin: 32px auto;
+      padding: 0 24px;
+      width: 100%;
+      flex: 1;
+    }
+
+    /* Auth Login Box */
+    .login-wrapper {
+      max-width: 420px;
+      margin: 80px auto;
+      background: var(--bg-alt);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius-l);
+      padding: 40px 32px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+    }
+
+    .login-wrapper h2 {
+      font-family: var(--serif);
+      font-size: 1.8rem;
+      margin-bottom: 8px;
+      color: var(--text);
+      text-align: center;
+    }
+
+    .login-wrapper p {
+      color: var(--text-dim);
+      font-size: 0.9rem;
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    /* Analytics Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 16px;
+      margin-bottom: 36px;
+    }
+
+    .stat-card {
+      background: var(--bg-alt);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-m);
+      padding: 20px 18px;
+      text-align: left;
+      transition: transform 0.25s var(--ease), border-color 0.25s var(--ease);
+    }
+
+    .stat-card:hover {
+      border-color: rgba(199, 160, 77, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .stat-card .label {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+
+    .stat-card .value {
+      font-family: var(--serif);
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--gold-bright);
+    }
+
+    /* Admin Section Box */
+    .admin-card {
+      background: var(--bg-alt);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-l);
+      padding: 28px;
+      margin-bottom: 36px;
+    }
+
+    .admin-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .admin-card-header h3 {
+      font-family: var(--serif);
+      font-size: 1.35rem;
+      color: var(--text);
+    }
+
+    /* Controls Bar */
+    .controls-bar {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .admin-input, .admin-select {
+      background: var(--bg-inset);
+      border: 1px solid var(--line-strong);
+      color: var(--text);
+      padding: 9px 14px;
+      border-radius: var(--radius-s);
+      font-size: 0.88rem;
+      outline: none;
+    }
+
+    .admin-input:focus, .admin-select:focus {
+      border-color: var(--gold);
+    }
+
+    .btn-gold {
+      background: var(--gold);
+      color: var(--gold-ink);
+      border: none;
+      padding: 10px 20px;
+      border-radius: var(--radius-s);
+      font-weight: 600;
+      font-size: 0.88rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.25s var(--ease), transform 0.25s var(--ease);
+    }
+
+    .btn-gold:hover {
+      background: var(--gold-bright);
+      transform: translateY(-1px);
+    }
+
+    .btn-danger {
+      background: rgba(220, 53, 69, 0.15);
+      color: #ff6b6b;
+      border: 1px solid rgba(220, 53, 69, 0.3);
+      padding: 6px 12px;
+      border-radius: var(--radius-s);
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-danger:hover {
+      background: rgba(220, 53, 69, 0.3);
+    }
+
+    /* Table Styling */
+    .admin-table-wrap {
+      overflow-x: auto;
+    }
+
+    table.admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+
+    table.admin-table th {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--line-strong);
+      color: var(--text-dim);
+      font-weight: 500;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+    }
+
+    table.admin-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      color: var(--text);
+      vertical-align: middle;
+    }
+
+    table.admin-table tr:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      text-transform: capitalize;
+    }
+
+    .status-badge.new { background: rgba(13, 110, 253, 0.15); color: #6ea8fe; border: 1px solid rgba(13, 110, 253, 0.3); }
+    .status-badge.contacted { background: rgba(255, 193, 7, 0.15); color: #ffda6a; border: 1px solid rgba(255, 193, 7, 0.3); }
+    .status-badge.qualified { background: rgba(13, 202, 240, 0.15); color: #6edff6; border: 1px solid rgba(13, 202, 240, 0.3); }
+    .status-badge.converted { background: rgba(25, 135, 84, 0.15); color: #75b798; border: 1px solid rgba(25, 135, 84, 0.3); }
+    .status-badge.closed { background: rgba(108, 117, 125, 0.15); color: #adb5bd; border: 1px solid rgba(108, 117, 125, 0.3); }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.82);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s var(--ease);
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-box {
+      background: var(--bg-alt);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius-l);
+      width: 100%;
+      max-width: 540px;
+      padding: 32px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .modal-header h4 {
+      font-family: var(--serif);
+      font-size: 1.4rem;
+    }
+
+    .close-modal {
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    .close-modal:hover { color: var(--gold-bright); }
+
+    .modal-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ADMIN NAVBAR -->
+  <nav class="admin-nav">
+    <div class="logo">
+      <img src="assets/favicon.png" alt="Rey Web Studio Logo">
+      <span class="logo-text">Rey Web <span>Studio</span> <small style="font-size: 0.75rem; color: var(--gold); font-family: var(--sans); text-transform: uppercase; margin-left: 6px;">Admin</small></span>
+    </div>
+    <div id="navRight" style="display: none; align-items: center; gap: 18px;">
+      <span id="adminUsername" style="font-size: 0.9rem; color: var(--text-dim);"><i class="fas fa-user-shield"></i> admin</span>
+      <button onclick="logoutAdmin()" class="admin-input" style="cursor: pointer; padding: 6px 14px;"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    </div>
+  </nav>
+
+  <div class="admin-container">
+
+    <!-- LOGIN VIEW -->
+    <div id="loginView" class="login-wrapper">
+      <h2>Admin Sign In</h2>
+      <p>Enter your credentials to access management console</p>
+      <form id="adminLoginForm" onsubmit="handleLogin(event)">
+        <div class="field" style="margin-bottom: 16px;">
+          <label for="loginUsername">Username</label>
+          <input type="text" id="loginUsername" placeholder="Username" required autocomplete="username">
+        </div>
+        <div class="field" style="margin-bottom: 24px;">
+          <label for="loginPassword">Password</label>
+          <input type="password" id="loginPassword" placeholder="Password" required autocomplete="current-password">
+        </div>
+        <button type="submit" class="btn-gold" style="width: 100%; justify-content: center; padding: 13px;">Sign In</button>
+      </form>
+      <div id="loginError" style="color: #ff6b6b; font-size: 0.85rem; margin-top: 14px; text-align: center; display: none;"></div>
+    </div>
+
+    <!-- MAIN DASHBOARD VIEW -->
+    <div id="dashboardView" style="display: none;">
+
+      <!-- STATS OVERVIEW -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="label">Total Leads</div>
+          <div class="value" id="statTotalLeads">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">New Leads</div>
+          <div class="value" id="statNewLeads">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Contacted</div>
+          <div class="value" id="statContactedLeads">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Qualified</div>
+          <div class="value" id="statQualifiedLeads">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Converted</div>
+          <div class="value" id="statConvertedLeads">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Closed</div>
+          <div class="value" id="statClosedLeads">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Total Projects</div>
+          <div class="value" id="statTotalProjects">0</div>
+        </div>
+      </div>
+
+      <!-- LEADS MANAGEMENT SECTION -->
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h3>Leads Management</h3>
+          <div class="controls-bar">
+            <input type="text" id="leadSearchInput" class="admin-input" placeholder="Search name, email, message..." oninput="loadLeads()">
+            <select id="leadStatusFilter" class="admin-select" onchange="loadLeads()">
+              <option value="">All Statuses</option>
+              <option value="new">New</option>
+              <option value="contacted">Contacted</option>
+              <option value="qualified">Qualified</option>
+              <option value="converted">Converted</option>
+              <option value="closed">Closed</option>
+            </select>
+            <button onclick="loadLeads()" class="admin-input" style="cursor: pointer;"><i class="fas fa-sync-alt"></i> Refresh</button>
+          </div>
+        </div>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Date</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Message</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="leadsTableBody">
+              <tr><td colspan="7" style="text-align: center; color: var(--text-dim);">Loading leads...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- PROJECTS MANAGEMENT SECTION -->
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h3>Dynamic Projects Management</h3>
+          <button onclick="createProject()" class="btn-gold"><i class="fas fa-plus"></i> Add Project</button>
+        </div>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Preview</th>
+                <th>Title</th>
+                <th>Category</th>
+                <th>Featured</th>
+                <th>Live URL</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="projectsTableBody">
+              <tr><td colspan="7" style="text-align: center; color: var(--text-dim);">Loading projects...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- PROJECT MODAL (SEPARATE FORM FOR PROJECT MANAGEMENT) -->
+  <div id="projectModal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h4 id="modalProjectTitle">Add Project</h4>
+        <button onclick="closeProjectModal()" class="close-modal"><i class="fas fa-times"></i></button>
+      </div>
+
+      <!-- Dedicated Project Form - strictly calls saveProject(e) -->
+      <form id="projectForm" class="modal-form" onsubmit="saveProject(event)">
+        <input type="hidden" id="projectId">
+
+        <div class="field">
+          <label for="projectTitleInput">Title</label>
+          <input type="text" id="projectTitleInput" class="admin-input" placeholder="e.g. Gym Website" required>
+        </div>
+
+        <div class="field">
+          <label for="projectDescriptionInput">Description</label>
+          <textarea id="projectDescriptionInput" class="admin-input" style="min-height: 80px; resize: vertical;" placeholder="Short project summary..." required></textarea>
+        </div>
+
+        <div class="field">
+          <label for="projectImageUrlInput">Image URL</label>
+          <input type="url" id="projectImageUrlInput" class="admin-input" placeholder="https://images.unsplash.com/..." required>
+        </div>
+
+        <div class="field">
+          <label for="projectLiveUrlInput">Live URL (Optional)</label>
+          <input type="url" id="projectLiveUrlInput" class="admin-input" placeholder="https://sample-gym-web.vercel.app/">
+        </div>
+
+        <div class="field">
+          <label for="projectCategorySelect">Category</label>
+          <select id="projectCategorySelect" class="admin-select" style="width: 100%;">
+            <option value="Web Design">Web Design</option>
+            <option value="Business Website">Business Website</option>
+            <option value="E-commerce">E-commerce</option>
+            <option value="Portfolio">Portfolio</option>
+            <option value="Landing Page">Landing Page</option>
+          </select>
+        </div>
+
+        <div class="field" style="display: flex; align-items: center; gap: 10px; margin-top: 4px;">
+          <input type="checkbox" id="projectFeaturedInput" style="width: 18px; height: 18px; accent-color: var(--gold);">
+          <label for="projectFeaturedInput" style="margin: 0; cursor: pointer;">Featured Project (Highlight on homepage)</label>
+        </div>
+
+        <div style="display: flex; gap: 12px; margin-top: 14px; justify-content: flex-end;">
+          <button type="button" onclick="closeProjectModal()" class="admin-input" style="cursor: pointer;">Cancel</button>
+          <button type="submit" id="saveProjectBtn" class="btn-gold">Save Project</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // --- AUTH UTILITIES ---
+    function getAuthToken() {
+      return localStorage.getItem("admin_token");
+    }
+
+    function getAuthHeaders() {
+      const token = getAuthToken();
+      return {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      };
+    }
+
+    async function checkAuth() {
+      const token = getAuthToken();
+      if (!token) {
+        showLogin();
+        return;
+      }
+
+      try {
+        const res = await fetch("/api/auth/me", { headers: getAuthHeaders() });
+        if (!res.ok) {
+          logoutAdmin();
+          return;
+        }
+        const user = await res.json();
+        document.getElementById("adminUsername").innerHTML = `<i class="fas fa-user-shield"></i> ${escapeHtml(user.username)}`;
+        showDashboard();
+      } catch (err) {
+        console.error("Auth verification failed:", err);
+        showLogin();
+      }
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      const username = document.getElementById("loginUsername").value.trim();
+      const password = document.getElementById("loginPassword").value.trim();
+      const errorDiv = document.getElementById("loginError");
+      errorDiv.style.display = "none";
+
+      try {
+        const res = await fetch("/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password })
+        });
+
+        if (!res.ok) {
+          const errData = await res.json();
+          errorDiv.innerText = errData.detail || "Invalid login credentials";
+          errorDiv.style.display = "block";
+          return;
+        }
+
+        const data = await res.json();
+        localStorage.setItem("admin_token", data.access_token);
+        document.getElementById("adminLoginForm").reset();
+        checkAuth();
+      } catch (err) {
+        errorDiv.innerText = "Connection error. Is the server running?";
+        errorDiv.style.display = "block";
+      }
+    }
+
+    function logoutAdmin() {
+      localStorage.removeItem("admin_token");
+      showLogin();
+    }
+
+    function showLogin() {
+      document.getElementById("loginView").style.display = "block";
+      document.getElementById("dashboardView").style.display = "none";
+      document.getElementById("navRight").style.display = "none";
+    }
+
+    function showDashboard() {
+      document.getElementById("loginView").style.display = "none";
+      document.getElementById("dashboardView").style.display = "block";
+      document.getElementById("navRight").style.display = "flex";
+      loadAnalytics();
+      loadLeads();
+      loadAdminProjects();
+    }
+
+    function escapeHtml(str) {
+      if (!str) return "";
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    // --- ANALYTICS OVERVIEW ---
+    async function loadAnalytics() {
+      try {
+        const res = await fetch("/api/analytics/overview", { headers: getAuthHeaders() });
+        if (!res.ok) return;
+        const data = await res.json();
+
+        document.getElementById("statTotalLeads").innerText = data.total_leads;
+        document.getElementById("statNewLeads").innerText = data.new_leads;
+        document.getElementById("statContactedLeads").innerText = data.contacted_leads;
+        document.getElementById("statQualifiedLeads").innerText = data.qualified_leads;
+        document.getElementById("statConvertedLeads").innerText = data.converted_leads;
+        document.getElementById("statClosedLeads").innerText = data.closed_leads;
+        document.getElementById("statTotalProjects").innerText = data.total_projects;
+      } catch (err) {
+        console.error("Failed to load analytics:", err);
+      }
+    }
+
+    // --- LEAD MANAGEMENT FUNCTIONS ---
+    async function loadLeads() {
+      const search = document.getElementById("leadSearchInput").value.trim();
+      const statusFilter = document.getElementById("leadStatusFilter").value;
+      const tbody = document.getElementById("leadsTableBody");
+
+      let url = "/api/leads?";
+      if (search) url += `search=${encodeURIComponent(search)}&`;
+      if (statusFilter) url += `status=${encodeURIComponent(statusFilter)}`;
+
+      try {
+        const res = await fetch(url, { headers: getAuthHeaders() });
+        if (!res.ok) throw new Error("Failed to fetch leads");
+        const leads = await res.json();
+
+        if (leads.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-dim); padding: 24px;">No leads found.</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = leads.map(lead => {
+          const dateStr = new Date(lead.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+          return `
+            <tr>
+              <td>#${lead.id}</td>
+              <td style="white-space: nowrap; color: var(--text-dim);">${dateStr}</td>
+              <td style="font-weight: 500;">${escapeHtml(lead.name)}</td>
+              <td><a href="mailto:${escapeHtml(lead.email)}" style="color: var(--gold);">${escapeHtml(lead.email)}</a></td>
+              <td style="max-width: 280px; font-size: 0.85rem; color: var(--text-dim);">${escapeHtml(lead.message)}</td>
+              <td>
+                <select class="admin-select" style="padding: 4px 8px; font-size: 0.8rem;" onchange="updateLeadStatus(${lead.id}, this.value)">
+                  <option value="new" ${lead.status === 'new' ? 'selected' : ''}>New</option>
+                  <option value="contacted" ${lead.status === 'contacted' ? 'selected' : ''}>Contacted</option>
+                  <option value="qualified" ${lead.status === 'qualified' ? 'selected' : ''}>Qualified</option>
+                  <option value="converted" ${lead.status === 'converted' ? 'selected' : ''}>Converted</option>
+                  <option value="closed" ${lead.status === 'closed' ? 'selected' : ''}>Closed</option>
+                </select>
+              </td>
+              <td>
+                <button onclick="deleteLead(${lead.id})" class="btn-danger" title="Delete Lead"><i class="fas fa-trash-alt"></i></button>
+              </td>
+            </tr>
+          `;
+        }).join("");
+      } catch (err) {
+        console.error("Error loading leads:", err);
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: #ff6b6b;">Error loading leads</td></tr>`;
+      }
+    }
+
+    async function updateLeadStatus(id, newStatus) {
+      try {
+        const res = await fetch(`/api/leads/${id}`, {
+          method: "PUT",
+          headers: getAuthHeaders(),
+          body: JSON.stringify({ status: newStatus })
+        });
+        if (!res.ok) throw new Error("Update failed");
+        loadAnalytics();
+      } catch (err) {
+        alert("Failed to update lead status");
+        loadLeads();
+      }
+    }
+
+    async function deleteLead(id) {
+      if (!confirm(`Are you sure you want to delete Lead #${id}?`)) return;
+      try {
+        const res = await fetch(`/api/leads/${id}`, {
+          method: "DELETE",
+          headers: getAuthHeaders()
+        });
+        if (!res.ok) throw new Error("Delete failed");
+        loadLeads();
+        loadAnalytics();
+      } catch (err) {
+        alert("Failed to delete lead");
+      }
+    }
+
+    // --- DYNAMIC PROJECT MANAGEMENT FUNCTIONS (BUG-PREVENTED SEPARATE MODULE) ---
+    async function loadAdminProjects() {
+      const tbody = document.getElementById("projectsTableBody");
+      try {
+        const res = await fetch("/api/projects", { headers: getAuthHeaders() });
+        if (!res.ok) throw new Error("Failed to fetch projects");
+        const projects = await res.json();
+
+        if (projects.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-dim); padding: 24px;">No projects created yet.</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = projects.map(proj => {
+          const liveLink = proj.live_url
+            ? `<a href="${escapeHtml(proj.live_url)}" target="_blank" style="color: var(--gold);"><i class="fas fa-external-link-alt"></i> Open</a>`
+            : `<span style="color: var(--text-faint);">None</span>`;
+          const featuredBadge = proj.featured
+            ? `<span style="color: var(--gold-bright); font-size: 0.8rem;"><i class="fas fa-star"></i> Featured</span>`
+            : `<span style="color: var(--text-faint); font-size: 0.8rem;">Standard</span>`;
+
+          return `
+            <tr>
+              <td>#${proj.id}</td>
+              <td><img src="${escapeHtml(proj.image_url)}" style="width: 54px; height: 36px; object-fit: cover; border-radius: 4px; border: 1px solid var(--line-strong);"></td>
+              <td style="font-weight: 500;">${escapeHtml(proj.title)}</td>
+              <td>${escapeHtml(proj.category)}</td>
+              <td>${featuredBadge}</td>
+              <td>${liveLink}</td>
+              <td>
+                <button onclick="editProject(${proj.id})" class="admin-input" style="cursor: pointer; padding: 4px 10px; margin-right: 6px;" title="Edit Project"><i class="fas fa-edit"></i> Edit</button>
+                <button onclick="deleteProject(${proj.id})" class="btn-danger" title="Delete Project"><i class="fas fa-trash-alt"></i></button>
+              </td>
+            </tr>
+          `;
+        }).join("");
+      } catch (err) {
+        console.error("Error loading admin projects:", err);
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: #ff6b6b;">Error loading projects</td></tr>`;
+      }
+    }
+
+    function createProject() {
+      document.getElementById("modalProjectTitle").innerText = "Add New Project";
+      document.getElementById("projectId").value = "";
+      document.getElementById("projectTitleInput").value = "";
+      document.getElementById("projectDescriptionInput").value = "";
+      document.getElementById("projectImageUrlInput").value = "";
+      document.getElementById("projectLiveUrlInput").value = "";
+      document.getElementById("projectCategorySelect").value = "Web Design";
+      document.getElementById("projectFeaturedInput").checked = false;
+
+      document.getElementById("projectModal").classList.add("active");
+    }
+
+    async function editProject(id) {
+      try {
+        const res = await fetch(`/api/projects/${id}`);
+        if (!res.ok) throw new Error("Failed to load project details");
+        const proj = await res.json();
+
+        document.getElementById("modalProjectTitle").innerText = `Edit Project #${proj.id}`;
+        document.getElementById("projectId").value = proj.id;
+        document.getElementById("projectTitleInput").value = proj.title;
+        document.getElementById("projectDescriptionInput").value = proj.description;
+        document.getElementById("projectImageUrlInput").value = proj.image_url;
+        document.getElementById("projectLiveUrlInput").value = proj.live_url || "";
+        document.getElementById("projectCategorySelect").value = proj.category;
+        document.getElementById("projectFeaturedInput").checked = Boolean(proj.featured);
+
+        document.getElementById("projectModal").classList.add("active");
+      } catch (err) {
+        alert("Failed to fetch project details for editing.");
+      }
+    }
+
+    function closeProjectModal() {
+      document.getElementById("projectModal").classList.remove("active");
+    }
+
+    // Save project strictly isolated from lead management
+    async function saveProject(e) {
+      e.preventDefault();
+      const id = document.getElementById("projectId").value;
+      const title = document.getElementById("projectTitleInput").value.trim();
+      const description = document.getElementById("projectDescriptionInput").value.trim();
+      const image_url = document.getElementById("projectImageUrlInput").value.trim();
+      const live_url = document.getElementById("projectLiveUrlInput").value.trim() || null;
+      const category = document.getElementById("projectCategorySelect").value;
+      const featured = document.getElementById("projectFeaturedInput").checked;
+
+      const payload = { title, description, image_url, live_url, category, featured };
+
+      const saveBtn = document.getElementById("saveProjectBtn");
+      saveBtn.disabled = true;
+
+      try {
+        let res;
+        if (id) {
+          // Update project (PUT /api/projects/{id})
+          res = await fetch(`/api/projects/${id}`, {
+            method: "PUT",
+            headers: getAuthHeaders(),
+            body: JSON.stringify(payload)
+          });
+        } else {
+          // Create project (POST /api/projects)
+          res = await fetch("/api/projects", {
+            method: "POST",
+            headers: getAuthHeaders(),
+            body: JSON.stringify(payload)
+          });
+        }
+
+        if (!res.ok) {
+          const errData = await res.json();
+          throw new Error(errData.detail || "Failed to save project");
+        }
+
+        closeProjectModal();
+        loadAdminProjects();
+        loadAnalytics();
+      } catch (err) {
+        alert(`Error: ${err.message}`);
+      } finally {
+        saveBtn.disabled = false;
+      }
+    }
+
+    async function deleteProject(id) {
+      if (!confirm(`Are you sure you want to delete Project #${id}?`)) return;
+      try {
+        const res = await fetch(`/api/projects/${id}`, {
+          method: "DELETE",
+          headers: getAuthHeaders()
+        });
+        if (!res.ok) throw new Error("Delete failed");
+        loadAdminProjects();
+        loadAnalytics();
+      } catch (err) {
+        alert("Failed to delete project");
+      }
+    }
+
+    // Initialize Auth check on page ready
+    document.addEventListener("DOMContentLoaded", checkAuth);
+  </script>
+
+</body>
+</html>
