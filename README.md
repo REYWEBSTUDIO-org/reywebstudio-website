@@ -228,7 +228,7 @@ The FastAPI application serves the public website, `admin.html`, and the API fro
 
 ### 1. Push the Project to GitHub
 
-Commit and push the project to a GitHub repository. Keep `backend/`, `index.html`, `admin.html`, `style.css`, `script.js`, and `assets/` in the repository root layout shown above.
+Commit and push the project to a GitHub repository. Keep `backend/` and `frontend/` in the repository root. The public site, admin page, styles, scripts, verification HTML, and `assets/` directory belong inside `frontend/`.
 
 ### 2. Create a PostgreSQL Database
 
@@ -288,18 +288,13 @@ In compliance with project specifications:
 
 ---
 
-## 🧪 Automated Testing
+## 🧪 Local Verification
 
-A dedicated test suite is included in `scratch/test_api.py`. To run the automated endpoint tests:
+The repository does not currently include an automated test suite. From the project root, run these syntax checks:
 
-```bash
-$env:PYTHONPATH="."
-python C:\Users\Fayaz\.gemini\antigravity-ide\brain\b2b0003d-08e5-400f-abcd-a0632672fb37\scratch\test_api.py
+```powershell
+.\venv\Scripts\python.exe -m compileall -q backend
+node --check frontend/script.js
 ```
-Outputs:
-- Contact form `POST /api/leads` (HTTP 201)
-- Public projects `GET /api/projects` (HTTP 200)
-- Admin login `POST /api/auth/login` (HTTP 200)
-- Admin authorization & status update (HTTP 200)
-- Project CRUD verification (HTTP 201 & 200 & 204)
-- Database calculated analytics overview (HTTP 200)
+
+For an HTTP smoke test, start the server with the command in **Quick Start** and check that `/`, `/admin.html`, `/docs`, and `/api/projects` load. Sign in through `/admin.html` to verify the admin login and dashboard. Avoid using write operations against production data when smoke-testing.
